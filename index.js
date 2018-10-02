@@ -1,11 +1,20 @@
-const Discord = require('discord.js');
+const Commando = require('discord.js-commando');
+const path = require('path');
+
 const { TOKEN } = require('./config');
-const bot = new Discord.Client();
 
-bot.on('message', (message) => {
-  if (message.content === 'ping') {
-    message.channel.send('pong');
-  }
-});
+const client = new Commando.Client();
 
-bot.login(TOKEN);
+client.registry
+  .registerGroup('random', 'Random')
+  .registerDefaults()
+  .registerCommandsIn(path.join(__dirname, 'commands'));
+
+client.login(TOKEN)
+  .then(console.log)
+  .then(() => {
+    client.guilds.forEach(guild => {
+      console.log(guild.id);
+    });
+  })
+  .catch(console.error);
